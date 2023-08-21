@@ -69,7 +69,6 @@ export const deleteGroup = async (req, res, next) => {
         })
     };
 
-
     try{
         await groupService.deleteGroup(req.body.groupId);
         res.status(200).json({msg: "Deleted"});
