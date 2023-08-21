@@ -56,6 +56,7 @@ export const addMember = (groupId, memberId) => new Promise(async(resolve, rejec
             groupid: groupId,
             role: 'member'
         });
+
         resolve(result);
     }catch(err){
         reject(new Error(err.message));
@@ -64,9 +65,35 @@ export const addMember = (groupId, memberId) => new Promise(async(resolve, rejec
 
 export const getAllGroupByUser = (userId) => new Promise(async(resolve, reject) => {
     try{
-        
+        const result = await db.Membergroup.findAll({
+            where: {
+                userid: userId,
+            },
+            include: db.Group,
+        });
         resolve(result);
     }catch(err){
         reject(new Error(err.message));
     }
 });
+
+export const deleteGroup = (groupId) => new Promise(async(resolve, reject) => {
+    try{
+        //delete Group table
+        await db.Group.destroy({
+            where: {
+                id: groupId
+            }
+        })
+        //delete Membergroup table
+        await db.Membergroup.destroy({
+            where: {
+                groupid: groupId
+            }
+        })
+
+        resolve({msg: "Deleted"})
+    }catch(err){
+        reject(new Error(err.message));
+    }
+})

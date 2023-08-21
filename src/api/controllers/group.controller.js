@@ -24,7 +24,7 @@ export const addMember = async (req, res, next) => {
     //check is admin of group
     const adminId = await groupService.findOwnerGroup(req.body.groupId);
     if (req.user.user.id !== adminId.userid){
-        return res.status(400).json({
+        return res.status(401).json({
             error: "You are not a moderator of the group"
         })
     };
@@ -47,7 +47,32 @@ export const addMember = async (req, res, next) => {
 export const getAllGroupByUser = async (req, res, next) => {
     try{
         const data = await groupService.getAllGroupByUser(req.user.user.id);
-        res.status(200).json(data);
+        let result = data.map(item => ({
+            groupId: item.groupid,
+            role: item.role,
+            groupName: item.Group.groupname,
+            description: item.Group.description,
+            totalMember: item.Group.totalmember,
+        }));
+        res.status(200).json(result);
+    }catch(err){
+        next(err);
+    }
+}
+
+export const deleteGroup = async (req, res, next) => {
+    //check is moderator of group
+    const adminId = await groupService.findOwnerGroup(req.body.groupId);
+    if (req.user.user.id !== adminId.userid){
+        return res.status(401).json({
+            error: "You are not a moderator of the group"
+        })
+    };
+
+
+    try{
+        await groupService.deleteGroup(req.body.groupId);
+        res.status(200).json({msg: "Deleted"});
     }catch(err){
         next(err);
     }
