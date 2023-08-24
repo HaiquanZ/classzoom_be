@@ -4,5 +4,7 @@ import authorize from '../middlewares/auth';
 const router = express.Router();
 
 router.post('/create', authorize, postController.createPost);
+router.delete('', authorize, postController.deletePost);
+router.get('/:id', authorize, postController.getALlPostsByGroupId);
 
 export default router;
