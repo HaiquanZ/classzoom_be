@@ -53,6 +53,7 @@ export const getAllGroupByUser = async (req, res, next) => {
             groupName: item.Group.groupname,
             description: item.Group.description,
             totalMember: item.Group.totalmember,
+            subject: item.Group.subject
         }));
         res.status(200).json(result);
     }catch(err){
