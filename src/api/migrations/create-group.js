@@ -24,6 +24,11 @@ module.exports = {
         },
         allowNull: false
       },
+      subject:{
+        type: Sequelize.ENUM,
+        values: ['bi', 'ch', 'ge', 'hi', 'la', 'li', 'ma', 'ph'],
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
