@@ -1,4 +1,4 @@
-import db, { Sequelize } from '../models';
+import db from '../models';
 
 export const createGroup = (group, adminId) => new Promise(async(resolve, reject) => {
     try{

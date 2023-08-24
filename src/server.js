@@ -10,6 +10,7 @@ app.use(function(req, res, next) {
     console.log(req.path, req.method);
     next();
 })
+app.use(cors({origin: true, credentials: true}));
 app.use(express.json());
 
 connectDatabase();
