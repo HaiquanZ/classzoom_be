@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       Membergroup.Group = Membergroup.belongsTo(models.Group, {
         foreignKey: "groupid"
       });
+
+      Membergroup.User = Membergroup.belongsTo(models.User, {
+        foreignKey: "userid"
+      });
     }
   }
   Membergroup.init({
