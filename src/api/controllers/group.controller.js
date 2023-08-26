@@ -3,7 +3,7 @@ import * as groupService from '../services/group.service';
 require('dotenv').config();
 
 export const createGroup = async (req, res, next) => {
-    let {groupname, description} = req.body;
+    let {groupname, description, subject} = req.body;
     if (!description || !groupname){
         return res.status(404).json({
             error: 'Name and description of group are required'
@@ -11,7 +11,7 @@ export const createGroup = async (req, res, next) => {
     }
     try{
         const data = await groupService.createGroup(
-            {groupname, description, totalmember: 1},
+            {groupname, description, totalmember: 1, subject},
             req.user.user.id
         );
         res.status(200).json({msg: 'Created group!'});
@@ -28,8 +28,10 @@ export const addMember = async (req, res, next) => {
             error: "You are not a moderator of the group"
         })
     };
+
+    
     //check if user already has group
-    const user = await groupService.findUserOnGroup(req.body.groupId, req.body.memberId);
+    const user = await groupService.findUserOnGroup(req.body.groupId, req.body.email);
     if (user){
         return res.status(400).json({
             error: "This user have already added!"
@@ -37,7 +39,7 @@ export const addMember = async (req, res, next) => {
     }
 
     try{
-        const data = await groupService.addMember(req.body.groupId, req.body.memberId);
+        const data = await groupService.addMemberByEmail(req.body.groupId, req.body.email);
         res.status(200).json({msg: 'Added member!'});
     }catch(err){
         next(err);
@@ -63,16 +65,42 @@ export const getAllGroupByUser = async (req, res, next) => {
 
 export const deleteGroup = async (req, res, next) => {
     //check is moderator of group
-    const adminId = await groupService.findOwnerGroup(req.body.groupId);
+    console.log(req.params.id);
+    const adminId = await groupService.findOwnerGroup(req.params.id);
     if (req.user.user.id !== adminId.userid){
         return res.status(401).json({
             error: "You are not a moderator of the group"
         })
     };
+    console.log(req.params.id);
 
     try{
-        await groupService.deleteGroup(req.body.groupId);
+        await groupService.deleteGroup(req.params.id);
         res.status(200).json({msg: "Deleted"});
+    }catch(err){
+        next(err);
+    }
+}
+
+export const getInforGroup = async (req, res, next) => {
+    try{
+        const data = await groupService.getInfoGroup(req.params.groupId);
+        res.status(200).json(data);
+    }catch(err){
+        next(err);
+    }
+};
+
+export const getUserByGroup = async (req, res, next) => {
+    try{
+        const rawData = await groupService.getUserByGroup(req.params.id);
+        const data = rawData.map( item => ({
+            userId: item.userid,
+            userName: item.User.username,
+            gender: item.User.gender,
+            email: item.User.email
+        }))
+        res.status(200).json(data);
     }catch(err){
         next(err);
     }

@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Post extends Model {
+  class Assignment extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,39 +11,30 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Post.Assignment = Post.hasOne(models.Assignment, {
-        foreignKey: "postid"
+      Assignment.Post = Assignment.hasOne(models.Post, {
+        foreignKey: "id"
       });
     }
   }
-  Post.init({
+  Assignment.init({
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true
     },
-    groupid: {
+    postid: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    userid: {
-        type: DataTypes.UUID,
-        allowNull: false,
-      },
-    content: {
-      type: DataTypes.TEXT,
+    dueto: {
+      type: DataTypes.DATE,
       allowNull: false,
-    },
-    type: {
-      type: DataTypes.ENUM,
-      values: ['post', 'call', 'assignment'],
-      allowNull: false
     }
   },
     {
       sequelize,
-      modelName: 'Post',
+      modelName: 'Assignment',
     });
-  return Post;
+  return Assignment;
 };

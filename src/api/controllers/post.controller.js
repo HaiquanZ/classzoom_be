@@ -5,12 +5,15 @@ require('dotenv').config();
 export const createPost = async (req, res, next) => {
     try{
         //check if user is member of group
-
+        if (!req.body.dueto){
+            req.body.dueto = '1';
+        }
         const data = await postService.createPost(
             req.body.content,
             req.body.type,
             req.body.groupId,
-            req.user.user.id
+            req.user.user.id,
+            req.body.dueto
         )
         res.status(201).json({msg: "Created post successfully"});
     }catch(err){
@@ -21,7 +24,7 @@ export const createPost = async (req, res, next) => {
 export const deletePost = async (req, res, next) => {
     try{
         //check user is owner of post
-
+        
         await postService.deletePost(req.body.postId);
         res.status(204).json({msg: "Deleted post successfully"});
     }catch(err){
@@ -33,6 +36,15 @@ export const getALlPostsByGroupId = async (req, res, next) => {
     try{
         console.log(req.param.groupId);
         const data = await postService.getALlPostsByGroupId(req.params.id);
+        res.status(200).json(data);
+    }catch(err){
+        next(err);
+    }
+}
+
+export const getAllAssignmentsByUser = async (req, res, next) => {
+    try{
+        const data = await postService.getAllAssignmentsByUser(req.user.user.id);
         res.status(200).json(data);
     }catch(err){
         next(err);

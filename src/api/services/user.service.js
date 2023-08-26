@@ -52,3 +52,4 @@ export const register = (user) => new Promise(async(resolve, reject) => {
         reject(new Error(message));
     }
 })
+

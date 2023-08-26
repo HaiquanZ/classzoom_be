@@ -33,28 +33,19 @@ export const findOwnerGroup = (groupId) => new Promise(async(resolve, reject) =>
     }
 });
 
-export const findUserOnGroup = (groupId, userId) => new Promise(async(resolve, reject,) => 
+export const findUserOnGroup = (groupId, email) => new Promise(async(resolve, reject,) => 
 {
     try{
-        const user = await db.Membergroup.findOne({
+        const user = await db.User.findOne({
+            where: {
+                email: email
+            }
+        })
+        const result = await db.Membergroup.findOne({
             where: {
                 groupid: groupId,
-                userid: userId
+                userid: user.id
             }
-        });
-
-        resolve(user);
-    }catch(err){
-        reject(new Error(err.message));
-    }
-});
-
-export const addMember = (groupId, memberId) => new Promise(async(resolve, reject) => {
-    try{
-        const result = await db.Membergroup.create({
-            userid: memberId,
-            groupid: groupId,
-            role: 'member'
         });
 
         resolve(result);
@@ -62,6 +53,24 @@ export const addMember = (groupId, memberId) => new Promise(async(resolve, rejec
         reject(new Error(err.message));
     }
 });
+
+export const addMemberByEmail = (groupId, email) => new Promise(async(resolve, reject) => {
+    try{
+        const user = await db.User.findOne({
+            where: {
+                email: email
+            }
+        })
+        const result = await db.Membergroup.create({
+            groupid: groupId,
+            userid: user.id,
+            role: 'member'
+        })
+        resolve(result);
+    }catch(err){
+        reject(new Error(err.message));
+    }
+})
 
 export const getAllGroupByUser = (userId) => new Promise(async(resolve, reject) => {
     try{
@@ -96,4 +105,31 @@ export const deleteGroup = (groupId) => new Promise(async(resolve, reject) => {
     }catch(err){
         reject(new Error(err.message));
     }
-})
+});
+
+export const getInfoGroup = (groupId) => new Promise(async(resolve, reject) => {
+    try{
+        const result = await db.Group.findOne({
+            where: {
+                id: groupId
+            }
+        });
+        resolve(result);
+    }catch(err){
+        reject(new Error(err.message));
+    }
+});
+
+export const getUserByGroup = (groupId) => new Promise(async(resolve, reject) =>{
+    try{
+        const result = await db.Membergroup.findAll({
+            where: {
+                groupid: groupId
+            },
+            include: db.User
+        })
+        resolve(result);
+    }catch(err){
+        reject(new Error(err.message));
+    }
+});
