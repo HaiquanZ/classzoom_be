@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Assignment extends Model {
+  class Answer extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,17 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Assignment.Post = Assignment.hasOne(models.Post, {
-        foreignKey: "id"
+      Answer.User = Answer.belongsTo(models.User, {
+        foreignKey: "userid"
       });
 
-      Assignment.Answer = Assignment.hasMany(models.Answer, {
-        foreignKey: "postid",
-        // as: "answer"
+      Answer.Assignment = Answer.belongsTo(models.Assignment, {
+        targetKey: "postid",
+        as: "assignment"
       });
     }
   }
-  Assignment.init({
+  Answer.init({
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -32,18 +32,19 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    name:{
-      type: DataTypes.STRING,
-      allowNull: false,
+    userid: {
+        type: DataTypes.UUID,
+        allowNull: false,
     },
-    dueto: {
-      type: DataTypes.DATE,
+    content: {
+      type: DataTypes.TEXT,
       allowNull: false,
+      defaultValue: 'none',
     }
   },
     {
       sequelize,
-      modelName: 'Assignment',
+      modelName: 'Answer',
     });
-  return Assignment;
+  return Answer;
 };

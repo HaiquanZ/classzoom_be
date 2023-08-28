@@ -98,7 +98,8 @@ export const getUserByGroup = async (req, res, next) => {
             userId: item.userid,
             userName: item.User.username,
             gender: item.User.gender,
-            email: item.User.email
+            email: item.User.email,
+            role: item.role
         }))
         res.status(200).json(data);
     }catch(err){
