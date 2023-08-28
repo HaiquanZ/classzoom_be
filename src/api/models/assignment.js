@@ -16,8 +16,9 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Assignment.Answer = Assignment.hasMany(models.Answer, {
+        sourceKey: "postid",
         foreignKey: "postid",
-        // as: "answer"
+        as: "answer"
       });
     }
   }
