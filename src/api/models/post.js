@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       Post.Assignment = Post.hasOne(models.Assignment, {
         foreignKey: "postid"
       });
+
+      Post.User = Post.belongsTo(models.User, {
+        foreignKey: "userid"
+      })
     }
   }
   Post.init({

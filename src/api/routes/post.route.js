@@ -6,6 +6,7 @@ const router = express.Router();
 router.post('/create', authorize, postController.createPost);
 router.delete('', authorize, postController.deletePost);
 router.get('/assignment', authorize, postController.getAllAssignmentsByUser);
+router.get('/assignment/:id', authorize, postController.getDetailAssignment);
 router.get('/:id', authorize, postController.getALlPostsByGroupId);
 
 
