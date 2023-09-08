@@ -1,4 +1,5 @@
 import * as groupService from '../services/group.service';
+import * as userService from '../services/user.service';
 
 require('dotenv').config();
 
@@ -21,6 +22,14 @@ export const createGroup = async (req, res, next) => {
 }
 
 export const addMember = async (req, res, next) => {
+    //check if email is not existing
+    const email = await userService.findUserByEmail(req.body.email);
+    if (!email){
+        return res.status(404).json({
+            error: 'Email not found'
+        })
+    }
+
     //check is admin of group
     const adminId = await groupService.findOwnerGroup(req.body.groupId);
     if (req.user.user.id !== adminId.userid){

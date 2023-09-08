@@ -53,3 +53,15 @@ export const register = (user) => new Promise(async(resolve, reject) => {
     }
 })
 
+export const findUserByEmail = (email) => new Promise(async(resolve, reject) => {
+    try{
+        const user = await db.User.findOne({
+            where: {
+                email: email
+            }
+        });
+        resolve(user);
+    }catch(err){
+        reject(new Error(err));
+    }
+ })

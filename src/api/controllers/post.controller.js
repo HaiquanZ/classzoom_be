@@ -12,7 +12,7 @@ export const createPost = async (req, res, next) => {
             req.body.dueto = '1';
             req.body.name = '1';
         }
-        const data = await postService.createPost(
+        const dataPost = await postService.createPost(
             req.body.content,
             req.body.type,
             req.body.groupId,
@@ -30,7 +30,7 @@ export const createPost = async (req, res, next) => {
                     email: item.User.email,
                     role: item.role
                 }))
-            await postService.initAnswer(data, req.body.groupId);
+            await postService.initAnswer(data, dataPost.id);
         }
         res.status(201).json({msg: "Created post successfully"});
     }catch(err){
@@ -67,3 +67,12 @@ export const getAllAssignmentsByUser = async (req, res, next) => {
         next(err);
     }
 }
+
+export const getDetailAssignment = async (req, res, next) => {
+    try{
+        const data = await postService.getDetailAssignment(req.params.id);
+        res.status(200).json(data);
+    }catch(err){
+        next(err);
+    }
+};

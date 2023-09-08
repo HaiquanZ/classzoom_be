@@ -18,7 +18,6 @@ module.exports = (sequelize, DataTypes) => {
       Answer.Assignment = Answer.belongsTo(models.Assignment, {
         targetKey: "postid",
         foreignKey: "postid",
-        as: "assignment"
       });
     }
   }

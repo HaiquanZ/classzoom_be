@@ -54,6 +54,12 @@ export const getALlPostsByGroupId = (groupId) => new Promise(async(resolve, reje
         const result = await db.Post.findAll({
             where: {
                 groupid: groupId
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ],
+            include: {
+                model: db.User,
             }
         });
         resolve(result);
@@ -81,10 +87,25 @@ export const getAllAssignmentsByUser = (userId) => new Promise(async(resolve, re
                 userid: userId
             },
             include: {
-                model: db.Assignment,
-                as: 'assignment'
+                association: db.Answer.Assignment 
             }
         });
+        resolve(result);
+    }catch(err){
+        reject(new Error(err.message));
+    }
+});
+
+export const getDetailAssignment = (id) => new Promise(async(resolve, reject) => {
+    try{
+        const result = await db.Post.findOne({
+            where: {
+                id: id 
+            },
+            include: {
+                model: db.Assignment
+            }
+        })
         resolve(result);
     }catch(err){
         reject(new Error(err.message));
