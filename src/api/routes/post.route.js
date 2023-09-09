@@ -24,6 +24,7 @@ router.get('/:id', authorize, postController.getALlPostsByGroupId);
 router.post('/answer', authorize, upload.single('file'), postController.submitAnswer);
 router.get('/answer/:id', authorize, postController.getAnswerOfUser);
 router.get('/answer-all/:id', authorize, postController.getAnswerOfAssignment);
+router.get('/answer-file/:id', authorize, postController.getFile);
 
 
 export default router;

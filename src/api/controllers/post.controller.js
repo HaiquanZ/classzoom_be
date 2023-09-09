@@ -105,3 +105,13 @@ export const getAnswerOfAssignment = async (req, res, next) => {
         next(err);
     }
 }
+
+export const getFile = async (req, res, next) => {
+    try{
+        const data = await postService.getFile(req.params.id);
+        res.status(200).json(data);
+        
+    }catch(err){
+        next(err);
+    }
+}

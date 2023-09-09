@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
       Post.User = Post.belongsTo(models.User, {
         foreignKey: "userid"
       })
+
+      Post.Comment = Post.hasMany(models.Comment, {
+        foreignKey: "postid"
+      })
     }
   }
   Post.init({

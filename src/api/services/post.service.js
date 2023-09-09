@@ -58,9 +58,11 @@ export const getALlPostsByGroupId = (groupId) => new Promise(async(resolve, reje
             order: [
                 ['createdAt', 'DESC']
             ],
-            include: {
-                model: db.User,
-            }
+            include: [
+                {
+                    model: db.User
+                },
+            ]
         });
         resolve(result);
     }catch(err){
@@ -155,6 +157,23 @@ export const getAnswerOfAssignment = (postId) => new Promise(async(resolve, reje
                 model: db.User
             }
         });
+        resolve(result);
+    }catch(err){
+        reject(new Error(err.message));
+    }
+});
+
+export const getFile = (id) => new Promise(async(resolve, reject) => {
+    try{
+        const result = await db.Answer.findOne({
+            where: {
+                id: id
+            },
+            include: {
+                model: db.User
+            }
+        });
+
         resolve(result);
     }catch(err){
         reject(new Error(err.message));
