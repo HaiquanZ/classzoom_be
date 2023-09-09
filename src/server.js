@@ -15,6 +15,7 @@ app.use(function(req, res, next) {
 })
 app.use(cors({origin: true, credentials: true}));
 app.use(express.json());
+app.use(express.static('upload'));
 
 connectDatabase();
 initRoutes(app);
