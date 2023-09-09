@@ -4,10 +4,10 @@ const cors = require('cors');
 import initRoutes from './api/routes';
 import connectDatabase from './api/config/connectDatabase';
 
-const app = express();
+export const app = express();
 
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
+// const server = require('http').Server(app);
+// const io = require('socket.io')(server);
 
 app.use(function(req, res, next) {
     console.log(req.path, req.method);
