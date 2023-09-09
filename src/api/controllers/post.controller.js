@@ -30,7 +30,7 @@ export const createPost = async (req, res, next) => {
                     email: item.User.email,
                     role: item.role
                 }))
-            await postService.initAnswer(data, dataPost.id);
+            await postService.initAnswer(data, dataPost.id, req.user.user.id);
         }
         res.status(201).json({msg: "Created post successfully"});
     }catch(err){
@@ -76,3 +76,32 @@ export const getDetailAssignment = async (req, res, next) => {
         next(err);
     }
 };
+
+export const submitAnswer = async (req, res, next) => {
+    try{
+        console.log(req.file);
+        //upload.single(req.body.file);
+        await postService.submitAnswer(req.file.filename ,req.user.user.id);
+        res.status(200).json({msg: 'Submitted answer'});
+    }catch(err){
+        next(err);
+    }
+}
+
+export const getAnswerOfUser = async (req, res, next) => {
+    try{
+        const data = await postService.getAnswerOfUser(req.params.id, req.user.user.id);
+        res.status(200).json(data);
+    }catch(err){
+        next(err);
+    }
+};
+
+export const getAnswerOfAssignment = async (req, res, next) => {
+    try{
+        const data = await postService.getAnswerOfAssignment(req.params.id);
+        res.status(200).json(data);
+    }catch(err){
+        next(err);
+    }
+}

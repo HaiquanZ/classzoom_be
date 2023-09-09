@@ -22,12 +22,12 @@ export const createPost = (content, type, groupId, userId, dueto, name) => new P
     }
 });
 
-export const initAnswer = (data, postId) => new Promise(async(resolve, reject) => {
+export const initAnswer = (data, postId, ownerId) => new Promise(async(resolve, reject) => {
     try{
         (async function loop() {
             console.log('okiii');
             for (let i = 0; i < data.length; i++) {
-                if ( data[i].role === 'member'){
+                if ( data[i].userId != ownerId){
                     await db.Answer.create({
                         userid: data[i].userId,
                         content: 'none',
@@ -106,6 +106,55 @@ export const getDetailAssignment = (id) => new Promise(async(resolve, reject) =>
                 model: db.Assignment
             }
         })
+        resolve(result);
+    }catch(err){
+        reject(new Error(err.message));
+    }
+});
+
+export const submitAnswer = (content, userId) => new Promise(async(resolve, reject) => {
+    try{
+        let user = await db.Answer.findOne({
+            where: {
+                userid: userId
+            }
+        })
+
+        await user.update({
+            content: content
+        })
+
+        resolve({msg: 'Submited answer'});
+
+    }catch(err){
+        reject(new Error(err.message));
+    }
+});
+
+export const getAnswerOfUser = (postId, userId) => new Promise(async(resolve, reject) => {
+    try{
+        const result = await db.Answer.findOne({
+            where: {
+                postid: postId,
+                userid: userId
+            }
+        });
+        resolve(result);
+    }catch(err){
+        reject(new Error(err.message));
+    }
+});
+
+export const getAnswerOfAssignment = (postId) => new Promise(async(resolve, reject) => {
+    try{
+        const result = await db.Answer.findAll({
+            where: {
+                postid: postId
+            },
+            include: {
+                model: db.User
+            }
+        });
         resolve(result);
     }catch(err){
         reject(new Error(err.message));
